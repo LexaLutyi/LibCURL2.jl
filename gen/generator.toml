@@ -10,6 +10,7 @@ printer_blacklist = [
     "CURL_SUFFIX_CURL_OFF_T",
     "CURL_SUFFIX_CURL_OFF_TU",
     "CURL_ZERO_TERMINATED",
+    "CURL_EXTERN"
 ]
 
 [codegen]
