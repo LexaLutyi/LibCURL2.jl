@@ -1,5 +1,3 @@
-module LibCURL2
-
 to_c_type(t::Type) = t
 to_c_type_pairs(va_list) = map(enumerate(to_c_type.(va_list))) do (ind, type)
     :(va_list[$ind]::$type)
@@ -2266,4 +2264,3 @@ const CURLH_1XX = 1 << 3
 
 const CURLH_PSEUDO = 1 << 4
 
-end # module
