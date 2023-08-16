@@ -14,6 +14,9 @@ printer_blacklist = [
     "CURL_SOCKET_BAD"
 ]
 
+prologue_file_path = "./prologue.jl"
+# epilogue_file_path = "./epilogue.jl"
+
 [codegen]
 use_ccall_macro = true
 wrap_variadic_function = true

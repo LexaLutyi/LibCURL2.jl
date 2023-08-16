@@ -3,6 +3,8 @@ to_c_type_pairs(va_list) = map(enumerate(to_c_type.(va_list))) do (ind, type)
     :(va_list[$ind]::$type)
 end
 
+const CURL_SOCKET_BAD = -1
+
 const __time_t = Clong
 
 const __socklen_t = Cuint
