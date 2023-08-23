@@ -39,3 +39,24 @@ end
     
     curl_easy_cleanup(curl)
 end
+
+
+# @testset "Headers" begin
+#     prev = Ptr{HttpClient.CurlHeader}(0)
+#     @test prev == C_NULL
+#     curl = setup_curl_for_reading()
+#     next_header_ptr = HttpClient.curl_easy_nextheader(curl, HttpClient.CURLH_HEADER, 0, prev)
+#     @test next_header_ptr != C_NULL
+#     next_header = unsafe_load(next_header_ptr)
+#     @test typeof(next_header) == HttpClient.CurlHeader
+
+#     c_headers = HttpClient.extract_c_headers(curl)
+#     @test typeof(c_headers) == Vector{HttpClient.CurlHeader}
+#     @test length(c_headers) > 0
+
+#     headers = c_headers .|> HttpClient.name_and_value |> Dict
+#     @test headers["Content-Type"] == "text/html; charset=UTF-8"
+#     @test headers["Content-Length"] == "1256"
+
+#     @test headers == HttpClient.extract_headers(curl)
+# end
