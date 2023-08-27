@@ -351,7 +351,7 @@ const CURLE_TFTP_ILLEGAL = 71 % UInt32
 const CURLE_TFTP_UNKNOWNID = 72 % UInt32
 const CURLE_REMOTE_FILE_EXISTS = 73 % UInt32
 const CURLE_TFTP_NOSUCHUSER = 74 % UInt32
-const CURLE_CONV_FAILED = 75 % UInt32
+const CURLE_OBSOLETE75 = 75 % UInt32
 const CURLE_OBSOLETE76 = 76 % UInt32
 const CURLE_SSL_CACERT_BADFILE = 77 % UInt32
 const CURLE_REMOTE_FILE_NOT_FOUND = 78 % UInt32
@@ -465,7 +465,7 @@ const CURLKHMATCH_LAST = 3 % UInt32
 # typedef int ( * curl_sshkeycallback ) ( CURL * easy , /* easy handle */ const struct curl_khkey * knownkey , /* known */ const struct curl_khkey * foundkey , /* found */ enum curl_khmatch , /* libcurl's view on the keys */ void * clientp )
 const curl_sshkeycallback = Ptr{Cvoid}
 
-# typedef int ( * curl_sshhostkeycallback ) ( void * clientp , /* custom pointer passed*/ /* with CURLOPT_SSH_HOSTKEYDATA */ int keytype , /* CURLKHTYPE */ const char * key , /*hostkey to check*/ size_t keylen )
+# typedef int ( * curl_sshhostkeycallback ) ( void * clientp , /* custom pointer passed */ /* with CURLOPT_SSH_HOSTKEYDATA */ int keytype , /* CURLKHTYPE */ const char * key , /* hostkey to check */ size_t keylen )
 const curl_sshhostkeycallback = Ptr{Cvoid}
 
 const curl_ftpccc = UInt32
@@ -668,7 +668,7 @@ const CURLOPT_SSL_CTX_FUNCTION = 20108 % UInt32
 const CURLOPT_SSL_CTX_DATA = 10109 % UInt32
 const CURLOPT_FTP_CREATE_MISSING_DIRS = 110 % UInt32
 const CURLOPT_PROXYAUTH = 111 % UInt32
-const CURLOPT_FTP_RESPONSE_TIMEOUT = 112 % UInt32
+const CURLOPT_SERVER_RESPONSE_TIMEOUT = 112 % UInt32
 const CURLOPT_IPRESOLVE = 113 % UInt32
 const CURLOPT_MAXFILESIZE = 114 % UInt32
 const CURLOPT_INFILESIZE_LARGE = 30115 % UInt32
@@ -865,7 +865,12 @@ const CURLOPT_MAXLIFETIME_CONN = 314 % UInt32
 const CURLOPT_MIME_OPTIONS = 315 % UInt32
 const CURLOPT_SSH_HOSTKEYFUNCTION = 20316 % UInt32
 const CURLOPT_SSH_HOSTKEYDATA = 10317 % UInt32
-const CURLOPT_LASTENTRY = 10318 % UInt32
+const CURLOPT_PROTOCOLS_STR = 10318 % UInt32
+const CURLOPT_REDIR_PROTOCOLS_STR = 10319 % UInt32
+const CURLOPT_WS_OPTIONS = 320 % UInt32
+const CURLOPT_CA_CACHE_TIMEOUT = 321 % UInt32
+const CURLOPT_QUICK_EXIT = 322 % UInt32
+const CURLOPT_LASTENTRY = 323 % UInt32
 
 const __JL_Ctag_19 = UInt32
 const CURL_HTTP_VERSION_NONE = 0 % UInt32
@@ -875,7 +880,8 @@ const CURL_HTTP_VERSION_2_0 = 3 % UInt32
 const CURL_HTTP_VERSION_2TLS = 4 % UInt32
 const CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE = 5 % UInt32
 const CURL_HTTP_VERSION_3 = 30 % UInt32
-const CURL_HTTP_VERSION_LAST = 31 % UInt32
+const CURL_HTTP_VERSION_3ONLY = 31 % UInt32
+const CURL_HTTP_VERSION_LAST = 32 % UInt32
 
 const __JL_Ctag_20 = UInt32
 const CURL_RTSPREQ_NONE = 0 % UInt32
@@ -1108,12 +1114,12 @@ function curl_global_sslset(id, name, avail)
     @ccall libcurl.curl_global_sslset(id::curl_sslbackend, name::Ptr{Cchar}, avail::Ptr{Ptr{Ptr{curl_ssl_backend}}})::CURLsslset
 end
 
-function curl_slist_append(arg1, arg2)
-    @ccall libcurl.curl_slist_append(arg1::Ptr{curl_slist}, arg2::Ptr{Cchar})::Ptr{curl_slist}
+function curl_slist_append(list, data)
+    @ccall libcurl.curl_slist_append(list::Ptr{curl_slist}, data::Ptr{Cchar})::Ptr{curl_slist}
 end
 
-function curl_slist_free_all(arg1)
-    @ccall libcurl.curl_slist_free_all(arg1::Ptr{curl_slist})::Cvoid
+function curl_slist_free_all(list)
+    @ccall libcurl.curl_slist_free_all(list::Ptr{curl_slist})::Cvoid
 end
 
 function curl_getdate(p, unused)
@@ -1222,7 +1228,8 @@ const CURL_LOCK_DATA_DNS = 3 % UInt32
 const CURL_LOCK_DATA_SSL_SESSION = 4 % UInt32
 const CURL_LOCK_DATA_CONNECT = 5 % UInt32
 const CURL_LOCK_DATA_PSL = 6 % UInt32
-const CURL_LOCK_DATA_LAST = 7 % UInt32
+const CURL_LOCK_DATA_HSTS = 7 % UInt32
+const CURL_LOCK_DATA_LAST = 8 % UInt32
 
 const curl_lock_access = UInt32
 const CURL_LOCK_ACCESS_NONE = 0 % UInt32
@@ -1259,12 +1266,12 @@ function curl_share_init()
 end
 
 # automatic type deduction for variadic arguments may not be what you want, please use with caution
-@generated function curl_share_setopt(arg1, option, va_list...)
-        :(@ccall(libcurl.curl_share_setopt(arg1::Ptr{CURLSH}, option::CURLSHoption; $(to_c_type_pairs(va_list)...))::CURLSHcode))
+@generated function curl_share_setopt(share, option, va_list...)
+        :(@ccall(libcurl.curl_share_setopt(share::Ptr{CURLSH}, option::CURLSHoption; $(to_c_type_pairs(va_list)...))::CURLSHcode))
     end
 
-function curl_share_cleanup(arg1)
-    @ccall libcurl.curl_share_cleanup(arg1::Ptr{CURLSH})::CURLSHcode
+function curl_share_cleanup(share)
+    @ccall libcurl.curl_share_cleanup(share::Ptr{CURLSH})::CURLSHcode
 end
 
 const CURLversion = UInt32
@@ -1278,7 +1285,8 @@ const CURLVERSION_SEVENTH = 6 % UInt32
 const CURLVERSION_EIGHTH = 7 % UInt32
 const CURLVERSION_NINTH = 8 % UInt32
 const CURLVERSION_TENTH = 9 % UInt32
-const CURLVERSION_LAST = 10 % UInt32
+const CURLVERSION_ELEVENTH = 10 % UInt32
+const CURLVERSION_LAST = 11 % UInt32
 
 mutable struct curl_version_info_data
     age::CURLversion
@@ -1306,6 +1314,7 @@ mutable struct curl_version_info_data
     zstd_version::Ptr{Cchar}
     hyper_version::Ptr{Cchar}
     gsasl_version::Ptr{Cchar}
+    feature_names::Ptr{Ptr{Cchar}}
     curl_version_info_data() = new()
 end
 
@@ -1560,7 +1569,8 @@ const CURLUE_BAD_QUERY = 26 % UInt32
 const CURLUE_BAD_SCHEME = 27 % UInt32
 const CURLUE_BAD_SLASHES = 28 % UInt32
 const CURLUE_BAD_USER = 29 % UInt32
-const CURLUE_LAST = 30 % UInt32
+const CURLUE_LACKS_IDN = 30 % UInt32
+const CURLUE_LAST = 31 % UInt32
 
 const CURLUPart = UInt32
 const CURLUPART_URL = 0 % UInt32
@@ -1661,19 +1671,39 @@ function curl_easy_nextheader(easy, origin, request, prev)
     @ccall libcurl.curl_easy_nextheader(easy::Ptr{CURL}, origin::Cuint, request::Cint, prev::Ptr{curl_header})::Ptr{curl_header}
 end
 
-const LIBCURL_COPYRIGHT = "1996 - 2022 Daniel Stenberg, <daniel@haxx.se>."
+struct curl_ws_frame
+    age::Cint
+    flags::Cint
+    offset::curl_off_t
+    bytesleft::curl_off_t
+    len::Csize_t
+end
 
-const LIBCURL_VERSION = "7.84.0"
+function curl_ws_recv(curl, buffer, buflen, recv, metap)
+    @ccall libcurl.curl_ws_recv(curl::Ptr{CURL}, buffer::Ptr{Cvoid}, buflen::Csize_t, recv::Ptr{Csize_t}, metap::Ptr{Ptr{curl_ws_frame}})::CURLcode
+end
+
+function curl_ws_send(curl, buffer, buflen, sent, framesize, sendflags)
+    @ccall libcurl.curl_ws_send(curl::Ptr{CURL}, buffer::Ptr{Cvoid}, buflen::Csize_t, sent::Ptr{Csize_t}, framesize::curl_off_t, sendflags::Cuint)::CURLcode
+end
+
+function curl_ws_meta(curl)
+    @ccall libcurl.curl_ws_meta(curl::Ptr{CURL})::Ptr{curl_ws_frame}
+end
+
+const LIBCURL_COPYRIGHT = "Daniel Stenberg, <daniel@haxx.se>."
+
+const LIBCURL_VERSION = "7.88.1"
 
 const LIBCURL_VERSION_MAJOR = 7
 
-const LIBCURL_VERSION_MINOR = 84
+const LIBCURL_VERSION_MINOR = 88
 
-const LIBCURL_VERSION_PATCH = 0
+const LIBCURL_VERSION_PATCH = 1
 
-const LIBCURL_VERSION_NUM = 0x00075400
+const LIBCURL_VERSION_NUM = 0x00075801
 
-const LIBCURL_TIMESTAMP = "2022-06-27"
+const LIBCURL_TIMESTAMP = "2023-02-20"
 
 const CURL_TYPEOF_CURL_OFF_T = Clong
 
@@ -1709,13 +1739,15 @@ const CURL_HTTPPOST_LARGE = 1 << 7
 
 const CURL_PROGRESSFUNC_CONTINUE = 0x10000001
 
-const CURL_MAX_READ_SIZE = 524288
+const CURL_MAX_READ_SIZE = 10 * 1024 * 1024
 
 const CURL_MAX_WRITE_SIZE = 16384
 
 const CURL_MAX_HTTP_HEADER = 100 * 1024
 
 const CURL_WRITEFUNC_PAUSE = 0x10000001
+
+const CURL_WRITEFUNC_ERROR = 0xffffffff
 
 const CURLFINFOFLAG_KNOWN_FILENAME = 1 << 0
 
@@ -1846,6 +1878,8 @@ const CURLE_FTP_BAD_DOWNLOAD_RESUME = CURLE_BAD_DOWNLOAD_RESUME
 const CURLE_LDAP_INVALID_URL = CURLE_OBSOLETE62
 
 const CURLE_CONV_REQD = CURLE_OBSOLETE76
+
+const CURLE_CONV_FAILED = CURLE_OBSOLETE75
 
 const CURLE_ALREADY_COMPLETE = 99999
 
@@ -2039,8 +2073,6 @@ const CURLOPTTYPE_VALUES = CURLOPTTYPE_LONG
 
 const CURLOPT_PROGRESSDATA = CURLOPT_XFERINFODATA
 
-const CURLOPT_SERVER_RESPONSE_TIMEOUT = CURLOPT_FTP_RESPONSE_TIMEOUT
-
 const CURLOPT_POST301 = CURLOPT_POSTREDIR
 
 const CURLOPT_SSLKEYPASSWD = CURLOPT_KEYPASSWD
@@ -2054,6 +2086,8 @@ const CURLOPT_FTP_SSL = CURLOPT_USE_SSL
 const CURLOPT_SSLCERTPASSWD = CURLOPT_KEYPASSWD
 
 const CURLOPT_KRB4LEVEL = CURLOPT_KRBLEVEL
+
+const CURLOPT_FTP_RESPONSE_TIMEOUT = CURLOPT_SERVER_RESPONSE_TIMEOUT
 
 const CURL_IPRESOLVE_WHATEVER = 0
 
@@ -2109,7 +2143,7 @@ const CURL_GLOBAL_DEFAULT = CURL_GLOBAL_ALL
 
 const CURL_GLOBAL_ACK_EINTR = 1 << 2
 
-const CURLVERSION_NOW = CURLVERSION_TENTH
+const CURLVERSION_NOW = CURLVERSION_ELEVENTH
 
 const CURL_VERSION_IPV6 = 1 << 0
 
@@ -2251,6 +2285,8 @@ const CURLU_NO_AUTHORITY = 1 << 10
 
 const CURLU_ALLOW_SPACE = 1 << 11
 
+const CURLU_PUNYCODE = 1 << 12
+
 const CURLOT_FLAG_ALIAS = 1 << 0
 
 const CURLH_HEADER = 1 << 0
@@ -2262,4 +2298,20 @@ const CURLH_CONNECT = 1 << 2
 const CURLH_1XX = 1 << 3
 
 const CURLH_PSEUDO = 1 << 4
+
+const CURLWS_TEXT = 1 << 0
+
+const CURLWS_BINARY = 1 << 1
+
+const CURLWS_CONT = 1 << 2
+
+const CURLWS_CLOSE = 1 << 3
+
+const CURLWS_PING = 1 << 4
+
+const CURLWS_OFFSET = 1 << 5
+
+const CURLWS_PONG = 1 << 6
+
+const CURLWS_RAW_MODE = 1 << 0
 

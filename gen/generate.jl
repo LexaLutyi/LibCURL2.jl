@@ -2,12 +2,12 @@ using Pkg
 using Pkg.Artifacts
 using Clang.Generators
 using Clang.Generators.JLLEnvs
-using LibCURL_jll
+using LibCURL2_jll
 
 cd(@__DIR__)
 
-artifact_toml = joinpath(dirname(pathof(LibCURL_jll)), "..", "StdlibArtifacts.toml")
-artifact_dir = Pkg.Artifacts.ensure_artifact_installed("LibCURL", artifact_toml)
+artifact_toml = joinpath(dirname(pathof(LibCURL2_jll)), "..", "Artifacts.toml")
+artifact_dir = Pkg.Artifacts.ensure_artifact_installed("LibCURL2", artifact_toml)
 
 include_dir = joinpath(artifact_dir, "include") |> normpath
 curl_h = joinpath(include_dir, "curl", "curl.h")
