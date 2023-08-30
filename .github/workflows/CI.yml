@@ -18,11 +18,12 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.0'
+          # - '1.5'
           - '1.9'
-          - 'nightly'
+          # - 'nightly'
         os:
           - ubuntu-latest
+          - macos-latest
         arch:
           - x64
     steps:
@@ -32,6 +33,13 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v1
+      - name: Add my Julia registry
+        run: |
+          julia --project -e '
+            using Pkg
+            Pkg.Registry.add(RegistrySpec(url = "https://github.com/LexaLutyi/MyJuliaRegistry.git"))
+            Pkg.Registry.add("General")
+            '
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
   docs:
