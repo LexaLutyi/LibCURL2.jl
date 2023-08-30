@@ -38,11 +38,34 @@ c_curl_write_cb = @cfunction(
 end
 
 
-@testset "LibCURL2" begin
+@testset "minimal example" begin
     curl = curl_easy_init()
     curl == C_NULL && error("curl_easy_init() failed")
     
     curl_easy_setopt(curl, CURLOPT_URL, "https://www.google.com")
+    curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL)
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2)
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1)
+    curl_easy_setopt(curl, CURLOPT_CAINFO, LibCURL2.cacert)
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, c_curl_write_cb)
+
+    code = curl_easy_perform(curl)
+    str = unsafe_string(curl_easy_strerror(code))
+    @test code == CURLE_OK
+    @test str == "No error"
+    curl_easy_cleanup(curl)
+end
+
+@testset "curl url" begin
+    url = "https://www.google.com/search?q=abc"
+    curl = curl_easy_init()
+    curl == C_NULL && error("curl_easy_init() failed")
+
+    # curl_easy_setopt(curl, CURLOPT_URL, "https://www.google.com")
+    c_url = curl_url()
+    curl_url_set(c_url, CURLUPART_URL, url, CURLU_DEFAULT_SCHEME)
+    curl_easy_setopt(curl, CURLOPT_CURLU, c_url)
+
     curl_easy_setopt(curl, CURLOPT_USE_SSL, CURLUSESSL_ALL)
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2)
     curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1)
