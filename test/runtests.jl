@@ -116,7 +116,7 @@ end
     set_ssl(curl)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, c_curl_write_cb)
 
-    interface = ""
+    interface = Ptr{UInt8}(0)
     curl_easy_setopt(curl, CURLOPT_INTERFACE, interface)
 
     code = curl_easy_perform(curl)
