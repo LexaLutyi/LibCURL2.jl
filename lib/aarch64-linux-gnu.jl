@@ -429,6 +429,7 @@ const curl_proxytype = UInt32
 const CURLPROXY_HTTP = 0 % UInt32
 const CURLPROXY_HTTP_1_0 = 1 % UInt32
 const CURLPROXY_HTTPS = 2 % UInt32
+const CURLPROXY_HTTPS2 = 3 % UInt32
 const CURLPROXY_SOCKS4 = 4 % UInt32
 const CURLPROXY_SOCKS5 = 5 % UInt32
 const CURLPROXY_SOCKS4A = 6 % UInt32
@@ -838,7 +839,7 @@ const CURLOPT_ALTSVC_CTRL = 286 % UInt32
 const CURLOPT_ALTSVC = 10287 % UInt32
 const CURLOPT_MAXAGE_CONN = 288 % UInt32
 const CURLOPT_SASL_AUTHZID = 10289 % UInt32
-const CURLOPT_MAIL_RCPT_ALLLOWFAILS = 290 % UInt32
+const CURLOPT_MAIL_RCPT_ALLOWFAILS = 290 % UInt32
 const CURLOPT_SSLCERT_BLOB = 40291 % UInt32
 const CURLOPT_SSLKEY_BLOB = 40292 % UInt32
 const CURLOPT_PROXY_SSLCERT_BLOB = 40293 % UInt32
@@ -871,7 +872,8 @@ const CURLOPT_REDIR_PROTOCOLS_STR = 10319 % UInt32
 const CURLOPT_WS_OPTIONS = 320 % UInt32
 const CURLOPT_CA_CACHE_TIMEOUT = 321 % UInt32
 const CURLOPT_QUICK_EXIT = 322 % UInt32
-const CURLOPT_LASTENTRY = 323 % UInt32
+const CURLOPT_HAPROXY_CLIENT_IP = 10323 % UInt32
+const CURLOPT_LASTENTRY = 10324 % UInt32
 
 const __JL_Ctag_34 = UInt32
 const CURL_HTTP_VERSION_NONE = 0 % UInt32
@@ -1210,7 +1212,9 @@ const CURLINFO_PROXY_ERROR = 2097211 % UInt32
 const CURLINFO_REFERER = 1048636 % UInt32
 const CURLINFO_CAINFO = 1048637 % UInt32
 const CURLINFO_CAPATH = 1048638 % UInt32
-const CURLINFO_LASTONE = 62 % UInt32
+const CURLINFO_XFER_ID = 6291519 % UInt32
+const CURLINFO_CONN_ID = 6291520 % UInt32
+const CURLINFO_LASTONE = 64 % UInt32
 
 const curl_closepolicy = UInt32
 const CURLCLOSEPOLICY_NONE = 0 % UInt32
@@ -1684,8 +1688,8 @@ function curl_ws_recv(curl, buffer, buflen, recv, metap)
     @ccall libcurl.curl_ws_recv(curl::Ptr{CURL}, buffer::Ptr{Cvoid}, buflen::Csize_t, recv::Ptr{Csize_t}, metap::Ptr{Ptr{curl_ws_frame}})::CURLcode
 end
 
-function curl_ws_send(curl, buffer, buflen, sent, framesize, sendflags)
-    @ccall libcurl.curl_ws_send(curl::Ptr{CURL}, buffer::Ptr{Cvoid}, buflen::Csize_t, sent::Ptr{Csize_t}, framesize::curl_off_t, sendflags::Cuint)::CURLcode
+function curl_ws_send(curl, buffer, buflen, sent, fragsize, flags)
+    @ccall libcurl.curl_ws_send(curl::Ptr{CURL}, buffer::Ptr{Cvoid}, buflen::Csize_t, sent::Ptr{Csize_t}, fragsize::curl_off_t, flags::Cuint)::CURLcode
 end
 
 function curl_ws_meta(curl)
@@ -1694,17 +1698,17 @@ end
 
 const LIBCURL_COPYRIGHT = "Daniel Stenberg, <daniel@haxx.se>."
 
-const LIBCURL_VERSION = "7.88.1"
+const LIBCURL_VERSION = "8.2.1"
 
-const LIBCURL_VERSION_MAJOR = 7
+const LIBCURL_VERSION_MAJOR = 8
 
-const LIBCURL_VERSION_MINOR = 88
+const LIBCURL_VERSION_MINOR = 2
 
 const LIBCURL_VERSION_PATCH = 1
 
-const LIBCURL_VERSION_NUM = 0x00075801
+const LIBCURL_VERSION_NUM = 0x00080201
 
-const LIBCURL_TIMESTAMP = "2023-02-20"
+const LIBCURL_TIMESTAMP = "2023-07-26"
 
 const CURL_TYPEOF_CURL_OFF_T = Clong
 
@@ -1714,9 +1718,11 @@ const CURL_FORMAT_CURL_OFF_TU = "lu"
 
 const CURL_TYPEOF_CURL_SOCKLEN_T = socklen_t
 
-const CURLSSLBACKEND_LIBRESSL = CURLSSLBACKEND_OPENSSL
+const CURLSSLBACKEND_AWSLC = CURLSSLBACKEND_OPENSSL
 
 const CURLSSLBACKEND_BORINGSSL = CURLSSLBACKEND_OPENSSL
+
+const CURLSSLBACKEND_LIBRESSL = CURLSSLBACKEND_OPENSSL
 
 const CURLSSLBACKEND_CYASSL = CURLSSLBACKEND_WOLFSSL
 
@@ -2089,6 +2095,8 @@ const CURLOPT_SSLCERTPASSWD = CURLOPT_KEYPASSWD
 const CURLOPT_KRB4LEVEL = CURLOPT_KRBLEVEL
 
 const CURLOPT_FTP_RESPONSE_TIMEOUT = CURLOPT_SERVER_RESPONSE_TIMEOUT
+
+const CURLOPT_MAIL_RCPT_ALLLOWFAILS = CURLOPT_MAIL_RCPT_ALLOWFAILS
 
 const CURL_IPRESOLVE_WHATEVER = 0
 
