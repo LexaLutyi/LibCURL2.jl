@@ -1,6 +1,6 @@
 module LibCURL2
 
-using LibCURL2_jll
+using LibCURL3_jll
 using MozillaCACerts_jll
 
 cacert = ""

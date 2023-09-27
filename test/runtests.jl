@@ -1,5 +1,5 @@
 using LibCURL2
-using LibCURL2_jll
+using LibCURL3_jll
 using Test
 
 
@@ -49,7 +49,7 @@ end
 @testset "minimal example" begin
     curl = curl_easy_init()
     curl == C_NULL && error("curl_easy_init() failed")
-    
+
     curl_easy_setopt(curl, CURLOPT_URL, "https://www.google.com")
     set_ssl(curl)
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, c_curl_write_cb)

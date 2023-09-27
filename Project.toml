@@ -4,12 +4,11 @@ authors = ["Samarin Aleksei <liotbiu1@gmail.com> and contributors"]
 version = "3.0.0-DEV"
 
 [deps]
-LibCURL2_jll = "e0c91b13-f409-526f-9b5b-50444cc01a73"
+LibCURL3_jll = "a3500760-7915-57d1-8b68-47e548e93688"
 MozillaCACerts_jll = "14a3606d-f60d-562e-9121-12d972cd8159"
 
 [compat]
 julia = "1"
-LibCURL2_jll = "8"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
