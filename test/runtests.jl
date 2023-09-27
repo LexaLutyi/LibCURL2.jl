@@ -1,5 +1,5 @@
 using LibCURL2
-using LibCURL3_jll
+using LibCURL2_jll
 using Test
 
 

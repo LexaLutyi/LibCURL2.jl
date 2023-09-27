@@ -1104,6 +1104,10 @@ function curl_global_cleanup()
     @ccall libcurl.curl_global_cleanup()::Cvoid
 end
 
+function curl_global_trace(config)
+    @ccall libcurl.curl_global_trace(config::Ptr{Cchar})::CURLcode
+end
+
 mutable struct curl_ssl_backend
     id::curl_sslbackend
     name::Ptr{Cchar}
@@ -1701,17 +1705,17 @@ end
 
 const LIBCURL_COPYRIGHT = "Daniel Stenberg, <daniel@haxx.se>."
 
-const LIBCURL_VERSION = "8.2.1"
+const LIBCURL_VERSION = "8.3.0"
 
 const LIBCURL_VERSION_MAJOR = 8
 
-const LIBCURL_VERSION_MINOR = 2
+const LIBCURL_VERSION_MINOR = 3
 
-const LIBCURL_VERSION_PATCH = 1
+const LIBCURL_VERSION_PATCH = 0
 
-const LIBCURL_VERSION_NUM = 0x00080201
+const LIBCURL_VERSION_NUM = 0x00080300
 
-const LIBCURL_TIMESTAMP = "2023-07-26"
+const LIBCURL_TIMESTAMP = "2023-09-13"
 
 const CURL_TYPEOF_CURL_OFF_T = Clonglong
 
@@ -2298,6 +2302,8 @@ const CURLU_NO_AUTHORITY = 1 << 10
 const CURLU_ALLOW_SPACE = 1 << 11
 
 const CURLU_PUNYCODE = 1 << 12
+
+const CURLU_PUNY2IDN = 1 << 13
 
 const CURLOT_FLAG_ALIAS = 1 << 0
 

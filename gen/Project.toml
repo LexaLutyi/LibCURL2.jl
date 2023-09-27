@@ -1,4 +1,4 @@
 [deps]
 Clang = "40e3b903-d033-50b4-a0cc-940c62c95e31"
-LibCURL3_jll = "a3500760-7915-57d1-8b68-47e548e93688"
+LibCURL2_jll = "e0c91b13-f409-526f-9b5b-50444cc01a73"
 MozillaCACerts_jll = "14a3606d-f60d-562e-9121-12d972cd8159"
