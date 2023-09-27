@@ -1,7 +1,7 @@
 name = "LibCURL2"
 uuid = "a9341e5c-07f0-4893-8fea-80ee6f4ebcc7"
 authors = ["Samarin Aleksei <liotbiu1@gmail.com> and contributors"]
-version = "3.0.0-DEV"
+version = "3.1.0-DEV"
 
 [deps]
 LibCURL2_jll = "e0c91b13-f409-526f-9b5b-50444cc01a73"
